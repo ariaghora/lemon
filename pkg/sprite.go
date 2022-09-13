@@ -152,14 +152,16 @@ func (l *LemonSprite) DoRemove() {
 }
 
 func (l *LemonSprite) DoUpdate(dt float64) {
-	if l.LOnUpdateFunc.Type() != lua.LTNil {
-		err := l.GameRef.lState.CallByParam(lua.P{
-			Fn:      l.LOnUpdateFunc,
-			NRet:    0,
-			Protect: true,
-		}, lua.LNumber(dt))
-		if err != nil {
-			panic(err)
+	if l.LOnUpdateFunc != nil {
+		if l.LOnUpdateFunc.Type() != lua.LTNil {
+			err := l.GameRef.lState.CallByParam(lua.P{
+				Fn:      l.LOnUpdateFunc,
+				NRet:    0,
+				Protect: true,
+			}, lua.LNumber(dt))
+			if err != nil {
+				panic(err)
+			}
 		}
 	}
 }
