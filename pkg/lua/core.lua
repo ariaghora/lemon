@@ -1,6 +1,6 @@
 L = Lemon
 
-L.RGBA = function(r, g, b, a)
+L.rgba = function(r, g, b, a)
     local color = {}
     color.r = r
     color.g = g
@@ -8,6 +8,8 @@ L.RGBA = function(r, g, b, a)
     color.a = a
     return color
 end
+
+L.RGBA = L.rgba -- backward compatibility
 
 L.states = {}
 L.set_global = function(key, val)

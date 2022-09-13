@@ -107,19 +107,9 @@ Finally, when it goes beyond screen width, return it's x position back to 0.
 > Some computers can achieve 60fps, but some others may not.
 > Without multiplying with `dt`, we will see much slower movement in slower machines.
 
-## Anatomy of Lemon games
+When you run the project and if everything is okay, you will see a ball rolling:
 
-```mermaid
-graph LR
-    LemonGame-->menu_scene
-    LemonGame-->main_scene
-    LemonGame-->help_scene
-    LemonGame-->game_over_scene
-
-    main_scene-->player_sprite
-    main_scene-->enemy_sprite
-    main_scene-->background_sprite
-```
+![](basics/hello%20world%20screenshot2.png)
 
 ## Distributing your game
 

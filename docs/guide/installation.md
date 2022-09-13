@@ -2,7 +2,7 @@
 
 ## Prebuilt binary
 
-Someone please help me building the binary :(
+Maybe soon?
 
 ## If you have golang installed
 
