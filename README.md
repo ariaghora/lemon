@@ -4,4 +4,4 @@
 
 Lemon is a 2D game engine based on raylib.
 
-Read more [here](https://github.io/ariaghora/lemon).
+Read more [here](https://ariaghora.github.io/lemon).
