@@ -1,0 +1,7 @@
+{
+    "title": "Space Shooter",
+    "starting_scene": "menu_scene",
+    "screen_width": 800,
+    "screen_height": 500,
+    "target_fps": 60
+}
