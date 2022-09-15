@@ -11,7 +11,7 @@ function on_load()
     droid_run_texture = L.new_texture("assets/run.png")
     droid_death_texture = L.new_texture("assets/damaged and death.png")
     droid:set_texture(droid_run_texture)
-    droid.x, droid.y, droid.width, droid.height = 200, 300, 58 * 3, 41 * 3
+    droid.x, droid.y, droid.width, droid.height = 200, 300, 58 * 5, 41 * 5
     droid.frame_count_x = 1
     droid.frame_count_y = 6
     droid.frame_height = 41
@@ -36,7 +36,7 @@ function on_update(dt)
         0,
         20,
         L.get_screen_height(),
-        L.RGBA(0, 0, 192, 255)
+        L.RGBA(255, 255, 255, 255)
     )
     if not droid_dead then
         if L.is_key_down(L.KEY_RIGHT) then
@@ -57,10 +57,10 @@ function on_update(dt)
 
     if droid_dead then
         droid:set_texture(droid_death_texture)
-        droid.animation_duration = 1 --seconds to complete one animation_duration loop
+        droid.animation_duration = 0.8
         droid.frame_count_x = 1
         droid.frame_count_y = 8
-        droid.width, droid.height = 58 * 3, 41 * 3
+        droid.width, droid.height = 58 * 5, 41 * 5
         droid.frame_height = 41
         if droid.frame_index == 8 then
             droid:stop()

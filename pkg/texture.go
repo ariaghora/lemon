@@ -1,6 +1,9 @@
 package pkg
 
 import (
+	"path"
+	"strings"
+
 	rl "github.com/gen2brain/raylib-go/raylib"
 	lua "github.com/yuin/gopher-lua"
 )
@@ -12,9 +15,22 @@ type TextureInfo struct {
 }
 
 func NewTexture(fileName string, gameRef *LemonGame) *TextureInfo {
-	o := &TextureInfo{
-		TextureID:   gameRef.textureCount,
-		TextureData: rl.LoadTexture(fileName),
+	var o *TextureInfo
+	if gameRef.BuildMode == "standalone" {
+		memoryFileName := strings.TrimPrefix(fileName, gameRef.RootDir)
+		buf := gameRef.GameAttachment[memoryFileName]
+		imageSize := len(buf)
+		imageData := rl.LoadImageFromMemory(path.Ext(memoryFileName), buf, int32(imageSize))
+
+		o = &TextureInfo{
+			TextureID:   gameRef.textureCount,
+			TextureData: rl.LoadTextureFromImage(imageData),
+		}
+	} else {
+		o = &TextureInfo{
+			TextureID:   gameRef.textureCount,
+			TextureData: rl.LoadTexture(fileName),
+		}
 	}
 	gameRef.textureDict[gameRef.textureCount] = o // keep track
 

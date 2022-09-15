@@ -4,11 +4,13 @@ import (
 	_ "embed"
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"path"
 	"strings"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
+	"github.com/maja42/ember"
 	lua "github.com/yuin/gopher-lua"
 )
 
@@ -91,6 +93,8 @@ type LemonGame struct {
 	LOnloadFunc        lua.LValue
 	lOnUpdateFunc      lua.LValue
 	textureDict        map[int]*TextureInfo
+	BuildMode          string
+	GameAttachment     map[string][]byte
 
 	spriteCount  int
 	textureCount int
@@ -103,14 +107,31 @@ func NewLemonGame(
 	screenHeight int,
 	title string,
 	targetFPS float32,
+	buildMode string,
 ) *LemonGame {
 	lemonGame := &LemonGame{
-		RootDir:      rootDir,
-		lState:       lua.NewState(),
-		spriteDict:   map[string]*LemonSprite{},
-		spriteCount:  0,
-		textureCount: 0,
-		textureDict:  map[int]*TextureInfo{},
+		RootDir:        rootDir,
+		lState:         lua.NewState(),
+		spriteDict:     map[string]*LemonSprite{},
+		spriteCount:    0,
+		textureCount:   0,
+		textureDict:    map[int]*TextureInfo{},
+		BuildMode:      buildMode,
+		GameAttachment: map[string][]byte{},
+	}
+
+	// If the game build is standalone, load embedded attachments to memory
+	if buildMode == "standalone" {
+		attachments, err := ember.Open()
+		if err != nil {
+			panic(err)
+		}
+		contents := attachments.List()
+		for _, memoryFileName := range contents {
+			reader := attachments.Reader(memoryFileName)
+			buf, _ := io.ReadAll(reader)
+			lemonGame.GameAttachment[memoryFileName] = buf
+		}
 	}
 
 	l_Lemon := &lua.LTable{}
@@ -216,7 +237,6 @@ func (lm *LemonGame) OnUpdate(dt float64) {
 }
 
 func (lm *LemonGame) Run() {
-
 	for !rl.WindowShouldClose() {
 		lm.OnLoad()
 
@@ -231,12 +251,6 @@ func (lm *LemonGame) Run() {
 }
 
 func (lm *LemonGame) SetScene(sceneName string) {
-	sceneSourceDir := path.Join(lm.RootDir, sceneName+".lua")
-	if _, err := os.Stat(sceneSourceDir); errors.Is(err, os.ErrNotExist) {
-		fmt.Printf("failed to switch to scene \"%s\" (cannot open %s)\n", sceneName, sceneSourceDir)
-		os.Exit(1)
-	}
-
 	// Clear current state first
 	lm.currentSceneLoaded = false
 	for k := range lm.spriteDict {
@@ -244,10 +258,30 @@ func (lm *LemonGame) SetScene(sceneName string) {
 	}
 	lm.spriteNames = []string{}
 
-	err := lm.lState.DoFile(sceneSourceDir)
-	if err != nil {
-		panic(err)
+	var err error
+	if lm.BuildMode == "standalone" {
+		// buf, err := io.ReadAll(attachments.Reader(sceneName + ".lua"))
+		buf := lm.GameAttachment[sceneName+".lua"]
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+		err = lm.lState.DoString(string(buf))
+		if err != nil {
+			panic(err)
+		}
+	} else {
+		sceneSourceDir := path.Join(lm.RootDir, sceneName+".lua")
+		if _, err := os.Stat(sceneSourceDir); errors.Is(err, os.ErrNotExist) {
+			fmt.Printf("failed to switch to scene \"%s\" (cannot open %s)\n", sceneName, sceneSourceDir)
+			os.Exit(1)
+		}
+		err = lm.lState.DoFile(sceneSourceDir)
+		if err != nil {
+			panic(err)
+		}
 	}
+
 	lm.LOnloadFunc = lm.lState.GetGlobal("on_load")
 	lm.lOnUpdateFunc = lm.lState.GetGlobal("on_update")
 }

@@ -3,5 +3,6 @@
     "starting_scene": "main_scene",
     "screen_width": 800,
     "screen_height": 500,
-    "target_fps": 60
+    "target_fps": 60,
+    "build_mode": "standalone"
 }

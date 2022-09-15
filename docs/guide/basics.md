@@ -42,7 +42,7 @@ These are two minimum functions
 
 We can run our project by running
 ```
-$ lemon project_dir/
+$ lemon run project_dir/
 ```
 and if everything goes well, we should see this window with a blank white screen:
 

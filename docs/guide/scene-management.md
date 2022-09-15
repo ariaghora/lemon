@@ -36,8 +36,14 @@ scene management/
 
 - The `game.json`:
   
-  ```
-  asd
+  ```json
+  {
+      "title": "Scene management",
+      "starting_scene": "title_scene",
+      "screen_width": 800,
+      "screen_height": 500,
+      "target_fps": 60
+  }
   ```
 
 - The `title_scene.lua`:

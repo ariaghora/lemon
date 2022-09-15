@@ -5,6 +5,7 @@ import (
 	"math"
 	"os"
 	"path"
+	"strings"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
 	lua "github.com/yuin/gopher-lua"
@@ -184,11 +185,21 @@ func (l *LemonSprite) lua_setScript(L *lua.LState) int {
 	// to the "script-wide global L"
 	scriptState.SetGlobal("L", L.GetGlobal("L"))
 
-	err := scriptState.DoFile(scriptPath)
-	if err != nil {
-		panic(err)
+	if l.GameRef.BuildMode == "standalone" {
+		memoryFileName := strings.TrimPrefix(scriptPath, l.GameRef.RootDir)
+		buf := l.GameRef.GameAttachment[memoryFileName]
+		err := scriptState.DoString(string(buf))
+		if err != nil {
+			panic(err)
+		}
+	} else {
+		err := scriptState.DoFile(scriptPath)
+		if err != nil {
+			panic(err)
+		}
 	}
 
+	// Extract on_load and on_update from the script state
 	l.LOnLoadFunc = scriptState.GetGlobal("on_load")
 	l.LOnUpdateFunc = scriptState.GetGlobal("on_update")
 
