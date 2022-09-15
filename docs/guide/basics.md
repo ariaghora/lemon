@@ -111,6 +111,25 @@ When you run the project and if everything is okay, you will see a ball rolling:
 
 ![](basics/hello%20world%20screenshot2.png)
 
-## Distributing your game
+## Distributing our game
 
-We are working on it :(
+Currently we only support `"standalone"` mode that includes all scripts and resources into the final executable.
+First of all, in `game.json` set `"build_mode"` to `"standalone"`.
+
+```json
+{
+    "title": "The Basics",
+    "starting_scene": "main_scene",
+    "screen_width": 800,
+    "screen_height": 500,
+    "target_fps": 60,
+    "build_mode": "standalone"
+}
+```
+Then execute following command:
+
+```bash
+$ lemon build project_dir/
+```
+
+You will find the executable file under the project directory with the same file name as the game title.
