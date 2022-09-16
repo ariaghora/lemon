@@ -4,7 +4,7 @@ function on_load()
     -- sprite name (e.g., "Ball") must be unique in current scene
     ball = L.new_sprite("Ball")
     -- or:
-    -- ball = Lemon.new_sprite("My Bunny")
+    -- ball = Lemon.new_sprite("Ball")
     ball:set_texture_from_file("ball.png")
     ball.width, ball.height = 64, 64
     ball.x, ball.y = 400, 250
