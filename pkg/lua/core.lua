@@ -1,5 +1,12 @@
 L = Lemon
 
+L.rect = function(x, y, w, h)
+    local rect = {
+        x = x, y = y, w = w, h = h
+    }
+    return rect
+end
+
 L.rgba = function(r, g, b, a)
     local color = {}
     color.r = r

@@ -78,6 +78,8 @@ func (l *LemonSprite) DoDraw(dt float64) {
 	height := float32(l.LTable.RawGetString("height").(lua.LNumber))
 	frameCountX := int(l.LTable.RawGetString("frame_count_x").(lua.LNumber))
 	frameCountY := int(l.LTable.RawGetString("frame_count_y").(lua.LNumber))
+	frameOffsetX := int(l.LTable.RawGetString("frame_offset_x").(lua.LNumber))
+	frameOffsetY := int(l.LTable.RawGetString("frame_offset_y").(lua.LNumber))
 	framewidth := int(l.LTable.RawGetString("frame_width").(lua.LNumber))
 	frameheight := int(l.LTable.RawGetString("frame_height").(lua.LNumber))
 	rotation := float32(l.LTable.RawGetString("rotation").(lua.LNumber))
@@ -107,7 +109,7 @@ func (l *LemonSprite) DoDraw(dt float64) {
 		col = (idx - 1) % frameCountX
 		rl.DrawTexturePro(
 			l.Texture.TextureData,
-			rl.Rectangle{X: float32(col * framewidth), Y: float32(row * frameheight), Width: float32(framewidth), Height: float32(frameheight)},
+			rl.Rectangle{X: float32(col*framewidth + frameOffsetX), Y: float32(row*frameheight + frameOffsetY), Width: float32(framewidth), Height: float32(frameheight)},
 			rl.Rectangle{X: x, Y: y, Width: float32(width), Height: float32(height)},
 			rl.Vector2{X: originX, Y: originY},
 			rotation,

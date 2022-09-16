@@ -139,6 +139,7 @@ func NewLemonGame(
 		"draw_rect_fill":            lemonGame.lua_draw_rect_fill,
 		"draw_text":                 lemonGame.lua_draw_text,
 		"draw_texture":              lemonGame.lua_draw_texture,
+		"draw_texture_advanced":     lemonGame.lua_draw_texture_advanced,
 		"find_sprites_by_name_like": lemonGame.lua_findSpritesByNameLike,
 		"get_fps":                   lemonGame.lua_getFPS,
 		"get_screen_height":         lemonGame.lua_getScreenHeight,
@@ -331,6 +332,30 @@ func (lm *LemonGame) lua_draw_texture(L *lua.LState) int {
 	id := int(texture.RawGetString("id").(lua.LNumber))
 	x, y := L.ToNumber(2), L.ToNumber(3)
 	rl.DrawTexture(lm.textureDict[id].TextureData, int32(x), int32(y), rl.White)
+	return 0
+}
+
+func (lm *LemonGame) lua_draw_texture_advanced(L *lua.LState) int {
+	texture := L.ToTable(1)
+	id := int(texture.RawGetString("id").(lua.LNumber))
+	srcRect, dstRect := L.ToTable(2), L.ToTable(3)
+	sx := srcRect.RawGetString("x").(lua.LNumber)
+	sy := srcRect.RawGetString("y").(lua.LNumber)
+	sw := srcRect.RawGetString("w").(lua.LNumber)
+	sh := srcRect.RawGetString("h").(lua.LNumber)
+	dx := dstRect.RawGetString("x").(lua.LNumber)
+	dy := dstRect.RawGetString("y").(lua.LNumber)
+	dw := dstRect.RawGetString("w").(lua.LNumber)
+	dh := dstRect.RawGetString("h").(lua.LNumber)
+	// rl.DrawTexture(lm.textureDict[id].TextureData, int32(x), int32(y), rl.White)
+	rl.DrawTexturePro(
+		lm.textureDict[id].TextureData,
+		rl.Rectangle{X: float32(sx), Y: float32(sy), Width: float32(sw), Height: float32(sh)},
+		rl.Rectangle{X: float32(dx), Y: float32(dy), Width: float32(dw), Height: float32(dh)},
+		rl.Vector2{X: 0, Y: 0},
+		0,
+		rl.White,
+	)
 	return 0
 }
 
